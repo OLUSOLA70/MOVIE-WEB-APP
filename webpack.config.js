@@ -34,7 +34,7 @@ module.exports = {
             directory: path.join(__dirname, 'dist'),
         },
         hot: true,
-        port: 3009,
+        port: 3010,
         open: true,
     },
     resolve: {

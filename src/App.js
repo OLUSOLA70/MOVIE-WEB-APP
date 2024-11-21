@@ -52,12 +52,31 @@ const App = () => {
     }
   };
 
-  const handleMovieClick = (movie) => {
-    setSelectedMovie(movie); // 
+  // Updated handleMovieClick to fetch full movie details, including imdb_id
+  const handleMovieClick = async (movie) => {
+    try {
+      const response = await axios.get(`${BASE_URL}/movie/${movie.id}`, {
+        params: {
+          api_key: API_KEY,
+        },
+      });
+
+      const movieDetails = response.data;
+      setSelectedMovie({
+        title: movieDetails.title,
+        release_date: movieDetails.release_date,
+        vote_average: movieDetails.vote_average,
+        poster_path: movieDetails.poster_path,
+        overview: movieDetails.overview,
+        imdb_id: movieDetails.imdb_id, // Fetch imdb_id from full movie details
+      });
+    } catch (error) {
+      console.error("Error fetching movie details:", error);
+    }
   };
 
   const closeDetail = () => {
-    setSelectedMovie(null); // 
+    setSelectedMovie(null);
   };
 
   return (
@@ -126,14 +145,7 @@ const App = () => {
 
       {selectedMovie && (
         <Detail
-          selected={{
-            title: selectedMovie.title,
-            release_date: selectedMovie.release_date,
-            vote_average: selectedMovie.vote_average,
-            poster_path: selectedMovie.poster_path,
-            overview: selectedMovie.overview,
-            imdb_id: selectedMovie.id,
-          }}
+          selected={selectedMovie} // Pass the full selected movie details
           closeDetail={closeDetail}
         />
       )}
